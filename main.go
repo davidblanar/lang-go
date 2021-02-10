@@ -14,7 +14,7 @@ func main() {
     if *filePath == "" {
 		log.Fatal("Missing file path")
     }
-    
+
     filePathArr := strings.Split(*filePath, ".")
     ext := filePathArr[len(filePathArr) - 1]
     if ext != "l" {
