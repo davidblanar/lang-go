@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type ReadStream struct {
 	input string
 	pos int

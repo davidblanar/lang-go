@@ -27,5 +27,7 @@ func main() {
     }
 
     input := string(fileContent)
-    fmt.Println(input)
+    rs := ReadStream{input, 0}
+    fmt.Println(rs)
+    // fmt.Println(TOKEN_IDENTIFIER)
 }
