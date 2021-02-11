@@ -32,7 +32,7 @@ func (t *Tokenizer) generate() []Token {
 			} else if t._isIdentifier(current) {
 				t._readIdentifier()
 			} else if _, ok := t.symbols[current]; ok {
-			    t._readSymbol()
+				t._readSymbol()
 			} else if t._isNumber(current) {
 				t._readNumber()
 			} else if current == "\"" {

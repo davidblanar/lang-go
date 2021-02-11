@@ -48,7 +48,11 @@ func main() {
 	numberChars := regexp.MustCompile(`[0-9]`)
 	whiteSpace := regexp.MustCompile(`\s`)
 	var tokens []Token
+	// TODO add proper error handling - line number and maybe also character number
 	tokenizer := Tokenizer{rs, symbols, identifierChars, numberChars, whiteSpace, tokens}
+	generatedTokens := tokenizer.generate()
 
-	fmt.Println(tokenizer.generate())
+	var ast []AstItem
+	parser := Parser{generatedTokens, 0, ast}
+	fmt.Printf("%+v",parser.generate())
 }
