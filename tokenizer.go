@@ -5,6 +5,7 @@ import (
 	"strings"
 	"strconv"
 	"log"
+	"fmt"
 )
 
 type Token struct {
@@ -38,7 +39,7 @@ func (t *Tokenizer) generate() []Token {
 			} else if current == "\"" {
 				t._readString()
 			} else {
-				log.Fatal("Unrecognized character %s", current)
+				log.Fatal(fmt.Sprintf("Unrecognized character %s", current))
 			}
 		} else {
 			break

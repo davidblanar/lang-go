@@ -27,9 +27,6 @@
 (call print "printing fib(10):")
 (call print (call fib 10))
 
-# call a built-in function
-(call str_concat "a" "b") # "ab"
-
 # array-like structures can be implemented in the language directly
 (fn car cons_cell (call cons_cell (fn _ a b (a)))) # get head of list
 (fn cdr cons_cell (call cons_cell (fn _ a b (b)))) # get tail of list
@@ -49,20 +46,12 @@
 (call print "printing cdr of cdr of longer_lst:")
 (call print (call cdr (call cdr longer_lst))) # 90
 
-# call a sequence of expressions
-(seq [(call print "first expression in sequence")
-    (call print "second expression in sequence")
-    (call print "third expression in sequence")])
-
 # using recursion
 (fn pow base exp (if (= exp 0)
     (1)
     (* base (call pow base (- exp 1)))))
 (call print "printing 2^3:")
 (call print (call pow 2 3)) # 8
-
-# uncomment to throw error
-# (call throw_error "error!")
 
 # dictionaries can be implemented using functions as well
 (fn make_dict dict key val
@@ -80,44 +69,41 @@
 (call print (call my_dict "my_key")) # true
 (call print (call my_dict "not_in_dict")) # null
 
-# file manipulation using built-in functions
-(var text (call read_file "./text.txt"))
-(call write_file "./text2.txt" (call str_concat text text))
-
-# expect function for testing
-(fn expect val expected (if (= val expected)
-    (true)
-    (call throw_error (call str_concat "Expected "
-        (call str_concat (call to_str val)
-            (call str_concat " to equal " (call to_str expected)))))))
-(call expect "a" "a")
-# (call expect "a" "b") # would throw an error
-
 # "and" functionality
 (fn and cond1 cond2 (if (cond1)
     (cond2)
     (false)))
 
-(call expect (call and true true) (true))
-(call expect (call and true false) (false))
-(call expect (call and false true) (false))
-(call expect (call and false false) (false))
+(call print "TRUE and TRUE is:")
+(call print (call and true true))
+(call print "TRUE and FALSE is:")
+(call print (call and true false))
+(call print "FALSE and TRUE is:")
+(call print (call and false true))
+(call print "FALSE and FALSE is:")
+(call print (call and false false))
 
 # "or" functionality
 (fn or cond1 cond2 (if (cond1)
     (true)
     (cond2)))
 
-(call expect (call or true true) (true))
-(call expect (call or true false) (true))
-(call expect (call or false true) (true))
-(call expect (call or false false) (false))
+(call print "TRUE or TRUE is:")
+(call print (call or true true))
+(call print "TRUE or FALSE is:")
+(call print (call or true false))
+(call print "FALSE or TRUE is:")
+(call print (call or false true))
+(call print "FALSE or FALSE is:")
+(call print (call or false false))
 
 # "not" functionality
 (fn not cond (if (cond) (false) (true)))
 
-(call expect (call not true) (false))
-(call expect (call not false) (true))
+(call print "not TRUE is:")
+(call print (call not true))
+(call print "not FALSE is:")
+(call print (call not false))
 
 # using null value and some recursion
 # [1,2,3,4,5]

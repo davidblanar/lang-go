@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"strings"
+	"fmt"
 )
 
 type AstItem struct {
@@ -91,7 +92,7 @@ func (p *Parser) _parseExpression() AstItem {
 				expr = p._parseVarReference()
 				break
 			default:
-				log.Fatal("Unrecognized token type %s, value %s", tokenType, val)
+				log.Fatal(fmt.Sprintf("Unrecognized token type %s, value %s", tokenType, val))
 				break
 		}
 	}
@@ -103,14 +104,14 @@ func (p *Parser) _parseExpression() AstItem {
 func (p *Parser) _requireType(expected string) {
 	tokenType := p._peek().tokenType
 	if tokenType != expected {
-		log.Fatal("Unexpected expression of type %s, expected %s", tokenType, expected)
+		log.Fatal(fmt.Sprintf("Unexpected expression of type %s, expected %s", tokenType, expected))
 	}
 }
 
 func (p *Parser) _requireVal(expected string) {
 	val := p._peek().val
 	if val != expected {
-		log.Fatal("Unexpected token %s, expected %s", val, expected)
+		log.Fatal(fmt.Sprintf("Unexpected token %s, expected %s", val, expected))
 	}
 }
 
@@ -275,7 +276,7 @@ func (p *Parser) _parseVarValue() AstItem {
 				body: nil,
 			}
 		default:
-			log.Fatal("Unexpected token type %s when parsing variable value", tokenType)
+			log.Fatal(fmt.Sprintf("Unexpected token type %s when parsing variable value", tokenType))
 			return AstItem{}
 	}
 }
@@ -339,10 +340,10 @@ func (p *Parser) _parseFnDeclaration() AstItem {
 	}
 	return AstItem{
 		astType: AST_FN_DECLARATION,
-		val: nil,
+		val: fnName,
 		leftOperand: nil,
 		rightOperand: nil,
-		name: fnName,
+		name: "",
 		args: args,
 		parsedArgs: nil,
 		body: &body,
@@ -352,16 +353,16 @@ func (p *Parser) _parseFnDeclaration() AstItem {
 func (p *Parser) _parseFnCall() AstItem {
 	p._next()
 	p._requireType(TOKEN_IDENTIFIER)
-	isFnName := true
-	var fnName string
+	isFnReference := true
+	var fnReference AstItem
 	var args []AstItem
 	for {
 		if p._isEndOfExpression() {
 			break
 		}
-		if isFnName {
-			isFnName = false
-			fnName = p._parseVarReference().val.(string)
+		if isFnReference {
+			isFnReference = false
+			fnReference = p._parseVarReference()
 			continue
 		}
 		if p._isBeginningOfExpression() {
@@ -372,10 +373,10 @@ func (p *Parser) _parseFnCall() AstItem {
 	}
 	return AstItem{
 		astType: AST_FN_CALL,
-		val: nil,
+		val: fnReference,
 		leftOperand: nil,
 		rightOperand: nil,
-		name: fnName,
+		name: "",
 		args: nil,
 		parsedArgs: args,
 		body: nil,

@@ -50,9 +50,19 @@ func main() {
 	var tokens []Token
 	// TODO add proper error handling - line number and maybe also character number
 	tokenizer := Tokenizer{rs, symbols, identifierChars, numberChars, whiteSpace, tokens}
-	generatedTokens := tokenizer.generate()
+	tokenizerOutput := tokenizer.generate()
 
 	var ast []AstItem
-	parser := Parser{generatedTokens, 0, ast}
-	fmt.Printf("%+v",parser.generate())
+	parser := Parser{tokenizerOutput, 0, ast}
+	astOutput := parser.generate()
+
+	env := Env{parent: nil, vars: make(map[string]interface{})}
+	print := func(args ...interface{}) interface{} {
+		for _, arg := range args {
+			fmt.Println(arg)
+		}
+		return nil
+	}
+	env.add("print", print)
+	evalUnderEnv(astOutput, env)
 }
