@@ -28,7 +28,7 @@ func main() {
 	}
 
 	input := string(fileContent)
-	rs := ReadStream{input, 0}
+	rs := ReadStream{input: input, pos: 0, lineno: 1, col: 1}
 
 	var symbols = map[string]bool {
 		"(": true,
@@ -47,8 +47,8 @@ func main() {
 	identifierChars := regexp.MustCompile(`[_A-Za-z]`)
 	numberChars := regexp.MustCompile(`[0-9]`)
 	whiteSpace := regexp.MustCompile(`\s`)
+
 	var tokens []Token
-	// TODO add proper error handling - line number and maybe also character number
 	tokenizer := Tokenizer{rs, symbols, identifierChars, numberChars, whiteSpace, tokens}
 	tokenizerOutput := tokenizer.generate()
 

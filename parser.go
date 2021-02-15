@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"strings"
 	"fmt"
 )
@@ -92,7 +91,7 @@ func (p *Parser) _parseExpression() AstItem {
 				expr = p._parseVarReference()
 				break
 			default:
-				log.Fatal(fmt.Sprintf("Unrecognized token type %s, value %s", tokenType, val))
+				throwError(fmt.Sprintf("Unrecognized token type %s, value %s", tokenType, val), token.lineno, token.col)
 				break
 		}
 	}
@@ -102,16 +101,16 @@ func (p *Parser) _parseExpression() AstItem {
 }
 
 func (p *Parser) _requireType(expected string) {
-	tokenType := p._peek().tokenType
-	if tokenType != expected {
-		log.Fatal(fmt.Sprintf("Unexpected expression of type %s, expected %s", tokenType, expected))
+	token := p._peek()
+	if token.tokenType != expected {
+		throwError(fmt.Sprintf("Unexpected expression of type %s, expected %s", token.tokenType, expected), token.lineno, token.col)
 	}
 }
 
 func (p *Parser) _requireVal(expected string) {
-	val := p._peek().val
-	if val != expected {
-		log.Fatal(fmt.Sprintf("Unexpected token %s, expected %s", val, expected))
+	token := p._peek()
+	if token.val != expected {
+		throwError(fmt.Sprintf("Unexpected token %s, expected %s", token.val, expected), token.lineno, token.col)
 	}
 }
 
@@ -276,7 +275,7 @@ func (p *Parser) _parseVarValue() AstItem {
 				body: nil,
 			}
 		default:
-			log.Fatal(fmt.Sprintf("Unexpected token type %s when parsing variable value", tokenType))
+			throwError(fmt.Sprintf("Unexpected token type %s when parsing variable value", tokenType), token.lineno, token.col)
 			return AstItem{}
 	}
 }

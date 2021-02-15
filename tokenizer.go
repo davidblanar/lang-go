@@ -11,6 +11,8 @@ import (
 type Token struct {
 	tokenType string
 	val interface{}
+	lineno int
+	col int
 }
 
 type Tokenizer struct {
@@ -39,7 +41,7 @@ func (t *Tokenizer) generate() []Token {
 			} else if current == "\"" {
 				t._readString()
 			} else {
-				log.Fatal(fmt.Sprintf("Unrecognized character %s", current))
+				throwError(fmt.Sprintf("Unrecognized character %s", current), t.rs.lineno, t.rs.col)
 			}
 		} else {
 			break
@@ -87,13 +89,13 @@ func (t *Tokenizer) _readIdentifier() {
 			break
 		}
 	}
-	token := Token{TOKEN_IDENTIFIER, sb.String()}
+	token := Token{TOKEN_IDENTIFIER, sb.String(), t.rs.lineno, t.rs.col}
 	t.tokens = append(t.tokens, token)
 }
 
 func (t *Tokenizer) _readSymbol() {
 	current := t.rs.next()
-	token := Token{TOKEN_SYMBOL, current}
+	token := Token{TOKEN_SYMBOL, current, t.rs.lineno, t.rs.col}
 	t.tokens = append(t.tokens, token)	
 }
 
@@ -115,7 +117,7 @@ func (t *Tokenizer) _readNumber() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	token := Token{TOKEN_NUMBER, val}
+	token := Token{TOKEN_NUMBER, val, t.rs.lineno, t.rs.col}
 	t.tokens = append(t.tokens, token)
 }
 
@@ -137,6 +139,6 @@ func (t *Tokenizer) _readString() {
 			break
 		}
 	}
-	token := Token{TOKEN_STRING, sb.String()}
+	token := Token{TOKEN_STRING, sb.String(), t.rs.lineno, t.rs.col}
 	t.tokens = append(t.tokens, token)
 }
